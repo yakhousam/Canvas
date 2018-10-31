@@ -19,3 +19,32 @@ function drawFractal(x, y, r) {
   }
 }
 
+//*******************
+//       Zoom
+//*******************
+
+let width = canva.width;
+let height = canva.height;
+let scale = 1;
+let syntheticEvent = new WheelEvent("syntheticWheel", {
+  deltaY: 0,
+  deltaMode: 0
+});
+
+canva.addEventListener("wheel", function(e) {
+  if (e.deltaY > syntheticEvent.deltaY) {
+    scale += 0.1;
+  } else {
+    scale -= 0.1;
+  }
+
+  let newWidth = width * scale;
+  let newHeight = height * scale;
+  c.save();
+  c.translate(-((newWidth - width) / 2), -((newHeight - height) / 2));
+  c.scale(scale, scale);
+  c.clearRect(0, 0, width, height);
+
+  drawFractal(canva.width / 2, canva.height / 2, 150);
+  c.restore();
+});
